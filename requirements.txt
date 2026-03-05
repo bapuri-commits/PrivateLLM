@@ -1,0 +1,29 @@
+# Fine-tuning
+unsloth
+trl
+peft
+transformers
+datasets
+accelerate
+bitsandbytes
+
+# Inference
+vllm
+
+# Utilities
+torch
+safetensors
+huggingface-hub
+tokenizers
+sentencepiece
+
+# Data processing
+pandas
+jsonlines
+
+# Experiment tracking
+wandb
+
+# Notebook
+jupyter
+ipywidgets

@@ -1,0 +1,68 @@
+# === Python ===
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+*.egg
+
+# === 가상환경 ===
+.venv/
+venv/
+env/
+
+# === IDE/에디터 ===
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.cursor/*
+!.cursor/rules/
+
+# === 환경 변수 / 시크릿 ===
+.env
+.env.local
+.env.*.local
+
+# === OS ===
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# === 로그 ===
+*.log
+logs/
+
+# === 테스트 ===
+.coverage
+htmlcov/
+.pytest_cache/
+
+# === ML/LLM 특화 ===
+# 모델 가중치 (용량이 매우 크므로 git에 포함하지 않음)
+models/
+*.bin
+*.safetensors
+*.gguf
+*.pt
+*.pth
+*.ckpt
+
+# LoRA / Adapter 가중치 (학습 산출물)
+output/
+runs/
+wandb/
+
+# 데이터셋 원본 (별도 다운로드)
+datasets/raw/
+*.parquet
+*.arrow
+
+# Hugging Face 캐시
+.cache/
+
+# Jupyter
+.ipynb_checkpoints/
