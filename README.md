@@ -1,38 +1,48 @@
-# PrivateLLM — 프라이빗 Uncensored LLM 구축 및 파인튜닝
+# PrivateLLM — 검열 없는 개인용 AI 시스템
 
-> RunPod 환경에서 오픈소스 LLM을 기반으로, 검열 없는 독립 추론 시스템을 구축하고 파인튜닝하는 프로젝트.
+> 오픈소스 모델/도구를 조합하여, 텍스트·이미지·영상을 다루는 uncensored AI 환경을 구축하는 프로젝트.
 
 ## What is this?
 
-상용 AI 서비스의 거절(Refusal) 제약을 벗어나, 자체 GPU 인프라에서 완전히 통제 가능한 LLM을 운영하기 위한 기술 프로젝트입니다.
+상용 AI 서비스(ChatGPT, Midjourney 등)의 검열 제약 없이, 로컬 GPU에서 자유롭게 사용할 수 있는 개인용 AI 시스템을 구축합니다. 밑바닥부터 만드는 게 아니라, **이미 잘 만들어진 오픈소스 제품을 조합**하고, 필요한 부분만 선택적으로 강화합니다.
 
 | 항목 | 내용 |
 |------|------|
-| **목표** | Uncensored LLM 서빙 + 커스텀 파인튜닝 파이프라인 구축 |
-| **인프라** | RunPod (RTX 4090 / A6000) |
-| **핵심 기술** | QLoRA, EXL2/GGUF 양자화, vLLM, Unsloth |
-| **베이스 모델** | Abliterated Llama 3, Dolphin, Midnight-Miqu, Mixtral |
+| **목표** | Uncensored 텍스트 LLM + 이미지 생성/편집 + 영상 처리 |
+| **전략** | 기존 오픈소스 제품 조합 → 사용 → 평가 → 필요한 부분만 강화 |
+| **로컬 GPU** | RTX 3080 Ti (12GB) — 8B LLM, SDXL/Flux 이미지 생성 가능 |
+| **클라우드** | RunPod — 70B 모델, 대규모 작업 시 사용 |
 
 ## Tech Stack
 
 | 분류 | 기술 |
 |------|------|
-| 언어 | Python 3.10+ |
-| 파인튜닝 | Unsloth / Axolotl, QLoRA |
-| 추론 엔진 | vLLM, Oobabooga Text-Generation-WebUI |
-| 양자화 | EXL2, GGUF |
-| 인프라 | RunPod, Docker (CUDA 12.1) |
-| 데이터셋 | Dolphin, OpenHermes 2.5, PIPPA, LimaRP |
+| 텍스트 LLM | Ollama + Dolphin / Abliterated 모델 |
+| 이미지 생성 | ComfyUI + SDXL / Flux |
+| 이미지 제어 | ControlNet (포즈/깊이), IP-Adapter |
+| 영상 처리 | AnimateDiff, Stable Video Diffusion |
+| 클라우드 GPU | RunPod (필요 시) |
+
+## Phases
+
+| Phase | 내용 | 인프라 |
+|-------|------|--------|
+| **1** | 텍스트 LLM 즉시 구동 (Ollama) | 로컬 |
+| **2** | 이미지 생성/편집 환경 (ComfyUI) | 로컬 |
+| **3** | 영상 처리 (이미지→영상, 보정) | 로컬/RunPod |
+| **4** | 평가 및 선택적 강화 | 상황에 따라 |
+| **5+** | AI 영상 생성, API 서빙, 파인튜닝 | RunPod |
 
 ## Project Structure
 
 ```
 PrivateLLM/
-├── configs/           # 학습/추론 설정 YAML
-├── scripts/           # RunPod 셋업, 데이터 전처리, 학습 스크립트
-├── data/              # 전처리된 데이터셋 (JSONL)
-├── notebooks/         # 실험/분석용 Jupyter 노트북
-├── docs/              # 설계 문서, 실험 로그
+├── configs/           # 설정 파일
+├── scripts/           # 유틸리티 스크립트
+├── data/              # 데이터
+├── notebooks/         # 실험/분석용
+├── docs/              # 설계 문서
+│   ├── MASTER_PLAN.md # 마스터 플랜 (기본 설계 문서)
 │   └── handoff/       # 세션 핸드오프
 └── README.md
 ```
@@ -40,16 +50,8 @@ PrivateLLM/
 ## Quick Start
 
 ```bash
-# 1. 환경 설정
-python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
-pip install -r requirements.txt
-
-# 2. 설정 파일 수정
-cp configs/example.yaml configs/train.yaml
-
-# 3. 파인튜닝 실행 (로컬 또는 RunPod)
-python scripts/train.py --config configs/train.yaml
+# Phase 1: 텍스트 LLM (Ollama 설치 후)
+ollama run dolphin-llama3
 ```
 
 ## 문서 규칙
